@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductParent\StoreRequest;
 use App\Http\Requests\ProductParent\UpdateRequest;
+use App\Http\Resources\ProductParent\ProductParentResource;
 use App\Models\ProductParent;
-use Illuminate\Http\Request;
+
+use App\Services\ProductParentService;
+
+use Illuminate\Http\Response;
 
 class ProductParentController extends Controller
 {
@@ -15,7 +19,9 @@ class ProductParentController extends Controller
      */
     public function index()
     {
-        //
+        $productParents = ProductParent::all();
+        $productParents = ProductParentResource::collection($productParents)->resolve();
+        return inertia("Admin/ProductParent/Index", compact('productParents'));
     }
 
     /**
@@ -23,7 +29,7 @@ class ProductParentController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Admin/ProductParent/Create");
     }
 
     /**
@@ -31,7 +37,9 @@ class ProductParentController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        //
+        $data = $request->validated();
+        $productParent = ProductParentService::store($data);
+        return ProductParentResource::make($productParent)->response();
     }
 
     /**
@@ -39,7 +47,8 @@ class ProductParentController extends Controller
      */
     public function show(ProductParent $productParent)
     {
-        //
+        $productParent = ProductParentResource::make($productParent)->resolve();
+        return inertia("Admin/ProductParent/Show", compact('productParent'));
     }
 
     /**
@@ -47,7 +56,8 @@ class ProductParentController extends Controller
      */
     public function edit(ProductParent $productParent)
     {
-        //
+        $productParent = ProductParentResource::make($productParent)->resolve();
+        return inertia("Admin/ProductParent/Edit", compact('productParent'));
     }
 
     /**
@@ -55,7 +65,9 @@ class ProductParentController extends Controller
      */
     public function update(UpdateRequest $request, ProductParent $productParent)
     {
-        //
+        $data = $request->validated();
+        $productParent = ProductParentService::update($data, $productParent);
+        return ProductParentResource::make($productParent)->response();
     }
 
     /**
@@ -63,6 +75,7 @@ class ProductParentController extends Controller
      */
     public function destroy(ProductParent $productParent)
     {
-        //
+        $productParent->delete();
+        return response()->json(['message'=>'success'], Response::HTTP_OK);
     }
 }

@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\StoreRequest;
 use App\Http\Requests\Category\UpdateRequest;
+use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
+
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -15,7 +19,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        $categories = CategoryResource::collection($categories)->resolve();
+        return inertia("Admin/Category/Index", compact('categories'));
     }
 
     /**
@@ -23,7 +29,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Admin/Category/Create");
     }
 
     /**
@@ -31,7 +37,9 @@ class CategoryController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        //
+        $data = $request->validated();
+        $category = CategoryService::store($data);
+        return CategoryResource::make($category)->response();
     }
 
     /**
@@ -39,7 +47,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        $category = CategoryResource::make($category)->resolve();
+        return inertia("Admin/Category/Show", compact('category'));
     }
 
     /**
@@ -47,7 +56,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $category = CategoryResource::make($category)->resolve();
+        return inertia("Admin/Category/Edit", compact('category'));
     }
 
     /**
@@ -55,7 +65,9 @@ class CategoryController extends Controller
      */
     public function update(UpdateRequest $request, Category $category)
     {
-        //
+        $data = $request->validated();
+        $category = CategoryService::update($data, $category);
+        return CategoryResource::make($category)->response();
     }
 
     /**
@@ -63,6 +75,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json(['message'=>'success'], Response::HTTP_OK);
     }
 }

@@ -20,7 +20,7 @@ export default {
         <Sidebar/>
       </nav>
     </aside>
-    <article class="w-7/8 bg-gray-50">
+    <article class="w-7/8 bg-gray-50 w-full mr-12">
       <slot/>
     </article>
   </section>

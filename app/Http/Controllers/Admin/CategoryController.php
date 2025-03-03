@@ -50,7 +50,10 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+
         $category = CategoryResource::make($category)->resolve();
+
+
         return inertia("Admin/Category/Show", compact('category'));
     }
 
@@ -59,8 +62,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $categories = CategoryResource::collection(Category::all()->except($category->id))->resolve();
         $category = CategoryResource::make($category)->resolve();
-        return inertia("Admin/Category/Edit", compact('category'));
+        return inertia("Admin/Category/Edit", compact('category', 'categories'));
     }
 
     /**
@@ -69,6 +73,7 @@ class CategoryController extends Controller
     public function update(UpdateRequest $request, Category $category)
     {
         $data = $request->validated();
+
         $category = CategoryService::update($data, $category);
         return CategoryResource::make($category)->response();
     }

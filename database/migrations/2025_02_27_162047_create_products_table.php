@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('price');
             $table->decimal('old_price')->nullable();
             $table->unsignedBigInteger('qty');
-            $table->foreignId('product_parent_id')->index()->constrained('product_parents');
+            $table->foreignId('product_group_id')->index()->constrained('product_groups');
             $table->foreignId('category_id')->index()->constrained('categories');
             $table->timestamps();
         });

@@ -51,11 +51,11 @@ name: "Sidebar",
                       </Link>
                     </li>
                     <li>
-                      <Link :href="route('admin.product-parents.index')">
+                      <Link :href="route('admin.product-groups.index')">
                             <div class="flex-col gap-1 flex">
                                 <div class="flex-col flex p-3 bg-white rounded-lg">
                                     <div class="h-5 gap-3 flex">
-                                        <h2 class="text-gray-500 text-sm font-medium">Product Parent</h2>
+                                        <h2 class="text-gray-500 text-sm font-medium">Product Groups</h2>
                                     </div>
                                 </div>
                             </div>

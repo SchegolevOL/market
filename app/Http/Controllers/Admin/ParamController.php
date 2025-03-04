@@ -49,6 +49,7 @@ class ParamController extends Controller
      */
     public function show(Param $param)
     {
+
         $param = ParamResource::make($param)->resolve();
 
         return inertia("Admin/Param/Show", compact('param'));

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Product;
+namespace App\Http\Requests\Admin\Param;
 
+use App\Enums\Param\ParamFilterTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -11,7 +12,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string|max:255',
+            'filter_type' =>'required|integer|in:'. ParamFilterTypeEnum::valuesAsString(),
         ];
     }
 }

@@ -4,7 +4,7 @@ import {Link} from "@inertiajs/vue3";
 
 
 export default {
-    name: "index",
+    name: "Show",
     layout: AdminLayout,
     props: {
       param: Object,

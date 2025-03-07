@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductGroup\StoreRequest;
-use App\Http\Requests\ProductGroup\UpdateRequest;
+use App\Http\Requests\Admin\ProductGroup\StoreRequest;
+use App\Http\Requests\Admin\ProductGroup\UpdateRequest;
 use App\Http\Resources\ProductGroup\ProductGroupResource;
 use App\Models\ProductGroup;
-
 use App\Services\ProductGroupService;
-
 use Illuminate\Http\Response;
 
 class ProductGroupController extends Controller

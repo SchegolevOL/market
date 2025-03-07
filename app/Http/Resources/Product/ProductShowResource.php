@@ -3,11 +3,10 @@
 namespace App\Http\Resources\Product;
 
 use App\Http\Resources\Image\ImageResource;
-use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ProductShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,8 +23,8 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'old_price' => $this->old_price,
             'qty' => $this->qty,
-            'product_group_id' => $this->product_group_id,
-            'category_id' => $this->category_id,
+            'product_group' => $this->productGroup,
+            'category' => $this->category,
             'images'=> ImageResource::collection($this->images)->resolve(),
         ];
     }

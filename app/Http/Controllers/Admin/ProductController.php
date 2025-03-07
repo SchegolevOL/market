@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\StoreRequest;
-use App\Http\Requests\Product\UpdateRequest;
+use App\Http\Requests\Admin\Product\StoreRequest;
+use App\Http\Requests\Admin\Product\UpdateRequest;
+use App\Http\Resources\Category\CategoryResource;
 use App\Http\Resources\Product\ProductResource;
+use App\Http\Resources\Product\ProductShowResource;
+use App\Http\Resources\ProductGroup\ProductGroupResource;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductGroup;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
@@ -28,7 +32,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return inertia("Admin/Product/Create");
+        $categories = CategoryResource::collection(Category::all())->resolve();
+        $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
+        return inertia("Admin/Product/Create", compact('categories', 'productGroups'));
     }
 
     /**
@@ -36,7 +42,10 @@ class ProductController extends Controller
      */
     public function store(StoreRequest $request)
     {
+
         $data = $request->validated();
+
+
         $product = ProductService::store($data);
         return ProductResource::make($product)->response();
     }
@@ -46,7 +55,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product = ProductResource::make($product)->resolve();
+        $product = ProductShowResource::make($product)->resolve();
+
         return inertia("Admin/Product/Show", compact('product'));
     }
 
@@ -56,7 +66,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $product = ProductResource::make($product)->resolve();
-        return inertia("Admin/Product/Edit", compact('product'));
+        $categories = CategoryResource::collection(Category::all())->resolve();
+        $productGroups = ProductGroupResource::collection(ProductGroup::all())->resolve();
+        return inertia("Admin/Product/Edit", compact('product', 'categories', 'productGroups'));
     }
 
     /**
@@ -65,6 +77,7 @@ class ProductController extends Controller
     public function update(UpdateRequest $request, Product $product)
     {
         $data = $request->validated();
+
         $product = ProductService::update($data, $product);
         return ProductResource::make($product)->response();
     }

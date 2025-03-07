@@ -44,7 +44,7 @@ export default {
                     <div class="overflow-x-auto w-full  border rounded-lg border-gray-300">
                         <table class="w-full rounded-xl">
                             <thead>
-                            <tr class="bg-gray-50">
+                            <tr class="bg-gray-50 border-b border-gray-300">
 
                                 <th scope="col" class="p-5 text-left whitespace-nowrap text-sm leading-6 font-semibold text-gray-900 capitalize"> Id </th>
                                 <th scope="col" class="p-5 text-left whitespace-nowrap text-sm leading-6 font-semibold text-gray-900 capitalize"> Title </th>
@@ -52,7 +52,7 @@ export default {
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-300 ">
-                            <tr v-for="productGroup in productGroupsData" class="bg-white transition-all duration-500 hover:bg-gray-50">
+                            <tr v-for="productGroup in productGroupsData" class="bg-white transition-all duration-500 hover:bg-gray-200">
 
                                 <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{{productGroup.id}} </td>
                                 <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">

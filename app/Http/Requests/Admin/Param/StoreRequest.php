@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Category;
+namespace App\Http\Requests\Admin\Param;
 
+use App\Enums\Param\ParamFilterTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -21,10 +22,9 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-            'title' => 'required|string',
-            'parent_id' => 'nullable|integer|exists:categories,id',
+            'title' => 'required|string|max:255',
+            'filter_type' =>'required|integer|in:'. ParamFilterTypeEnum::valuesAsString(),
         ];
     }
 }

@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\Param\ParamFilterTypeEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Param\StoreRequest;
-use App\Http\Requests\Param\UpdateRequest;
+use App\Http\Requests\Admin\Param\StoreRequest;
+use App\Http\Requests\Admin\Param\UpdateRequest;
 use App\Http\Resources\Param\ParamResource;
 use App\Models\Param;
-
 use App\Services\ParamService;
-
 use Illuminate\Http\Response;
 
 class ParamController extends Controller

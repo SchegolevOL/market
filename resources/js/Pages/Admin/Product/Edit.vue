@@ -21,6 +21,7 @@ export default {
                 product:this.product,
                 images:null,
                 params:[],
+                _method:'patch',
             },
             success: false
         }
@@ -28,15 +29,27 @@ export default {
     },
     methods: {
         updateProduct() {
-
-            axios.patch(route('admin.products.update', this.entries.product), this.entries)
+            console.log(this.product.images)
+            axios.post(route('admin.products.update', this.product.id), this.entries, {
+                headers:{
+                    "Content-Type": "multipart/form-data"
+                }
+            })
                 .then(res => {
-                    this.entries.product = {
-                        category_id:null,
-                        product_group_id:null,
-                    }
+                    this.product.images = res.data.data.images
                     this.success = true
                 })
+        },
+        deleteImages(image){
+            axios.delete(route('admin.images.destroy', image.id)).then(res=>{
+
+                this.product.images = this.product.images.filter(productImage=>productImage.id !== image.id)
+            })
+        },
+        setImages(e){
+
+            this.entries.images = e.target.files
+
         },
       watch: {
         param: {
@@ -76,9 +89,13 @@ export default {
         <!--      Start Displaying images        -->
         <div class="flex justify-between">
             <div v-for="image in product.images"
-                 class="w-full relative h-auto p-1 border border-gray-200 rounded-md max-w-sm mx-auto">
-                <img :src="image.url" alt="Image" class="rounded-md max-w-full h-auto">
+                 class="w-full relative h-auto p-1 border border-gray-200 rounded-md max-w-sm mx-auto text-center">
+                <img :src="image.url" :alt="product.title" class="rounded-md max-w-full h-auto">
+                <div >
+                    <a @click.prevent="deleteImages(image)" href="" class="inline-block px-2 py-1 text-sm bg-red-500 text-white absolute inset-x-0 bottom-0">del</a>
+                </div>
             </div>
+
         </div>
         <!--      End Displaying images        -->
 

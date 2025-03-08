@@ -79,6 +79,7 @@ class ProductController extends Controller
         $data = $request->validated();
 
         $product = ProductService::update($data, $product);
+
         return ProductResource::make($product)->response();
     }
 

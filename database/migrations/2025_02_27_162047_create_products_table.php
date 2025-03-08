@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('content');
+            $table->unsignedBigInteger('article')->unique();
             $table->decimal('price');
             $table->decimal('old_price')->nullable();
             $table->unsignedBigInteger('qty');
             $table->foreignId('product_group_id')->index()->constrained('product_groups');
             $table->foreignId('category_id')->index()->constrained('categories');
+            $table->foreignId('parent_id')->index()->nullable()->constrained('products');
             $table->timestamps();
         });
     }

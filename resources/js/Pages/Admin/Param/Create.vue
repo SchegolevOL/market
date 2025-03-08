@@ -35,7 +35,14 @@ export default {
         },
 
     },
-   
+    watch: {
+        param: {
+            handler(new_val, old_val){
+                this.success=false
+            },
+            deep: true
+        }
+    }
 
 }
 </script>
@@ -54,7 +61,7 @@ export default {
                                             </span>
         </Link>
     </div>
-    {{this.success}}
+
     <div v-if="success" class="p-4 mb-4 text-sm text-emerald-500 rounded-xl bg-emerald-50 border border-emerald-400 font-normal" role="alert">
         <span class="font-semibold mr-2">Success</span> Your subscription payment is successful
     </div>

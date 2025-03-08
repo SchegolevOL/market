@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Param\ParamFilterTypeEnum;
 use App\Enums\Role\RoleEnum;
+use App\Models\Param;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -28,6 +30,13 @@ class DatabaseSeeder extends Seeder
             'title' => RoleEnum::ADMIN->value
         ]);
         $user->roles()->sync($role->id);
+
+        $this->call([
+            ParamSeeder::class,
+            ProductGroupSeeder::class,
+            CategorySeeder::class,
+        ]);
+
 
 
     }

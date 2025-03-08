@@ -30,12 +30,19 @@ export default {
 
 
                     this.success = true
-
+                    this.productGroup.title=''
                 })
         },
 
     },
-
+    watch: {
+        productGroup: {
+            handler(new_val, old_val){
+                this.success=false
+            },
+            deep: true
+        }
+    }
 
 }
 </script>

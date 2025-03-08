@@ -32,6 +32,27 @@ class StoreRequest extends FormRequest
             'product.category_id'=>'required|integer|exists:categories,id',
             'images' => 'nullable|array',
             'images.*' => 'required|file',
+            'params'=>'nullable|array',
+            'params.*.id'=>'required|integer|exists:params,id',
+            'params.*.value'=>'required|string',
+            'product.article'=>'required|integer|unique:products,article',
         ];
     }
+
+    /**
+     * @return StoreRequest|void
+     * @ru: - метод добавляет возвращаемый массив, массив images, вызывается после валидации (в контроллере нужно вызывать $request->validationData())
+     * @en: - the method adds an array of images to the returned array, called after validation (in the controller, you need to call the $request->validationData())
+     */
+    protected function passedValidation()
+    {
+        $validated = $this->validated();
+        return $this->merge([
+            'product'=>$validated['product'],
+            'params'=>$validated['params'],
+            'images'=>$this->images ?? []
+        ]);
+    }
+
+
 }

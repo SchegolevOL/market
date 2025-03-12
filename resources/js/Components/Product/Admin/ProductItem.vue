@@ -5,7 +5,7 @@ export default {
     name: "ProductItem" ,
     props:{
         product:Object,
-        isChild:Boolean,
+
     },
     data(){
         return{
@@ -15,22 +15,27 @@ export default {
     components: {Link},
     methods: {
         deleteProduct(product) {
-            axios.delete(route('admin.products.destroy', product.id)).then(res => {
-                this.$emit('product_deleted', product)
-                //this.productsData = this.productsData.filter(productData => productData.id !== product.id)
-            })
+
+             axios.delete(route('admin.products.destroy', this.product.id)).then(res => {
+                 this.$emit('product_deleted', product)
+                 console.log('ok')
+             })
         },
         getProductChildren(){
-            if (this.is_closed){
-                this.is_closed=false
-                this.product.productChild =null
-                return
-            }
+
             axios.get(route('admin.products.index-children', this.product.id))
                 .then(res=>{
-                    this.product.productChild = res.data
-                    this.is_closed=true
+                    this.product.children = res.data
+                    this.is_closed=false
+
                 })
+
+        },
+        closeProductChildren(){
+
+            this.is_closed=true
+            this.product.children =null
+
         }
     }
 }
@@ -96,7 +101,7 @@ export default {
 
         </td>
         <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-            <button v-if="!isChild  && is_closed" @click.prevent="getProductChildren" class="p-2 rounded-full bg-white group transition-all duration-500 ">
+            <button v-if="!product.parent_id  && is_closed" @click.prevent="getProductChildren" class="p-2 rounded-full bg-white group transition-all duration-500 ">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.0004 8.99963L12.0001 14.9999L5.99634 8.99609"
@@ -104,7 +109,7 @@ export default {
                           stroke-linejoin="round" class="my-path"></path>
                 </svg>
             </button>
-            <button v-if="!isChild  && !is_closed" @click.prevent="getProductChildren" class="p-2 rounded-full bg-white group transition-all duration-500 ">
+            <button v-if="!product.parent_id  && !is_closed" @click.prevent="closeProductChildren" class="p-2 rounded-full bg-white group transition-all duration-500 ">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.99622 14.9963L11.9965 8.99609L18.0002 14.9999"

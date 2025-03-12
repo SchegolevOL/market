@@ -21,12 +21,18 @@ export default {
     },
     methods: {
         updateProductsData(product) {
+            console.log('1111')
+            if (product.parent_id){
+                this.productsData.forEach(productData=>{
+                    if (productData.id===product.parent_id){
+                        productData.children = productData.children.filter(child=>child.id!==product.id)
+                    }
+                })
+                return
+            }
             this.productsData = this.productsData.filter(productData => productData.id !== product.id)
         },
-        updateProductsChildrenData(data) {
-         r
-            this.productChildrenData = data.res.data
-        },
+
     }
 }
 </script>
@@ -81,12 +87,11 @@ export default {
                                 <tbody class="divide-y divide-gray-300 ">
                                 <template v-for="product in productsData">
 
-                                    <product-item @product_children_got="updateProductsChildrenData" @product_deleted="updateProductsData"
+                                    <product-item  @product_deleted="updateProductsData"
                                                   :product="product"></product-item>
-                                    <template v-if="product.productChild" v-for="productChild in product.productChild">
+                                    <template v-if="product.children" v-for="productChild in product.children">
                                         <product-item @product_deleted="updateProductsData"
-                                                      :product="productChild"
-                                        :is-child="true"></product-item>
+                                                      :product="productChild"></product-item>
 
 
                                     </template>

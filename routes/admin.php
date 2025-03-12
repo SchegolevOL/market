@@ -16,4 +16,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', IsAdminMiddleware::c
     Route::resource('params', ParamController::class);
     Route::resource('product-groups', ProductGroupController::class)->parameters(['product-groups' => 'productGroup']);
     Route::delete('images/{image}', [ImageController::class, 'destroy'])->name('images.destroy');
+
+    Route::get('products/{product}/children/create', [ProductController::class, 'createChildren'])->name('products.create-children');
+    Route::get('products/{product}/children', [ProductController::class, 'indexChildren'])->name('products.index-children');
 });

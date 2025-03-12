@@ -4,7 +4,7 @@ import {Link} from "@inertiajs/vue3";
 import axios from "axios";
 
 export default {
-    name: "Create",
+    name: "CreateChild",
     layout: AdminLayout,
     components: {
         Link
@@ -13,6 +13,7 @@ export default {
         categories: Array,
         productGroups: Array,
         params: Array,
+        product:Object,
 
     },
     data() {
@@ -20,13 +21,11 @@ export default {
             paramOption: {
                 paramObj: {}
             },
-            entries: {
-                product: {
-                    category_id: null,
-                    product_group_id: null,
-                },
-                images: [],
-                params: [],
+            entries:{
+                product:this.product,
+                images:null,
+                params:this.product.params,
+
             },
             success: false
         }
@@ -34,23 +33,20 @@ export default {
     },
     methods: {
         storeProduct() {
-
+            this.entries.product.parent_id = this.product.id
             axios.post(route('admin.products.store'), this.entries, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
             })
                 .then(res => {
-                    this.entries = {
-                        product: {
-                            category_id: null,
-                            product_group_id: null,
-                        },
-                        images: [],
-                        params: [],
-                    }
-                    this.success = true
+                    this.product.images = res.data.data.images
                     this.$refs.image_input.value = null
+                    this.$nextTick(()=>{//выполняется только после формирования Dom дерева
+                        this.success = true
+                    })
+                    this.success = true
+
                 })
 
         },
@@ -72,6 +68,14 @@ export default {
         }
 
     },
+    watch: {
+        entries: {
+            handler(){
+                this.success=false
+            },
+            deep: true
+        }
+    },
 
 
 }
@@ -89,6 +93,12 @@ export default {
                                                 Back
                                             </span>
             </Link>
+        </div>
+
+        <div v-if="success"
+             class="p-4 mb-4 text-sm text-emerald-500 rounded-xl bg-emerald-50 border border-emerald-400 font-normal"
+             role="alert">
+            <span class="font-semibold mr-2">Success</span> Your subscription payment is successful
         </div>
 
         <div v-if="success"

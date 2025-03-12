@@ -33,6 +33,21 @@ class UpdateRequest extends FormRequest
             'product.category_id'=>'required|integer|exists:categories,id',
             'images' => 'nullable|array',
             'images.*' => 'required|file',
+            'params.*.id'=>'required|integer|exists:params,id',
+            'params.*.value'=>'required|string',
+            //'product.article'=>'required|integer|unique:products,article',
         ];
     }
+
+    protected function passedValidation()
+    {
+        $validated = $this->validated();
+        return $this->merge([
+            'product'=>$validated['product'],
+            'params'=>$validated['params'],
+            'images'=>$this->images ?? []
+        ]);
+    }
+
+
 }

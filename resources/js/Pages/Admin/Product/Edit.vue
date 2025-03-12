@@ -13,14 +13,18 @@ export default {
         categories: Array,
         productGroups: Array,
         product:Object,
+        params: Array,
 
     },
     data() {
         return {
+            paramOption: {
+                paramObj: {}
+            },
             entries:{
                 product:this.product,
                 images:null,
-                params:[],
+                params:this.product.params,
                 _method:'patch',
             },
             success: false
@@ -37,7 +41,10 @@ export default {
             })
                 .then(res => {
                     this.product.images = res.data.data.images
-                    this.success = true
+                    this.$nextTick(()=>{//выполняется только после формирования Dom дерева
+                        this.success = true
+                    })
+
                 })
         },
         deleteImages(image){
@@ -51,9 +58,21 @@ export default {
             this.entries.images = e.target.files
 
         },
+        setParam() {
+            this.entries.params.push({
+                id: this.paramOption.paramObj.id,
+                title: this.paramOption.paramObj.title,
+                value: this.paramOption.value,
+
+            })
+
+        },
+        removeParam(paramEntre){
+            this.entries.params = this.entries.params.filter(param=>param!==paramEntre)
+        },
       watch: {
-        param: {
-          handler(new_val, old_val){
+        entries: {
+          handler(){
             this.success=false
           },
           deep: true
@@ -125,6 +144,13 @@ export default {
                 </div>
             </div>
             <div class="grid grid-cols-3 gap-3 text-white text-sm text-center font-bold leading-6">
+
+                <div class="block w-full">
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Article</label>
+                    <div class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none ">
+                    {{entries.product.article}}
+                    </div>
+                </div>
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Price</label>
                     <input type="number" v-model="entries.product.price"
@@ -170,22 +196,90 @@ export default {
                         </option>
                     </select>
                 </div>
-<!--Start Select Params-->
-<!--                <div class="block w-full">
-                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Select Product Group</label>
-                    <select v-model="entries.params"
-                            class="h-12 border border-gray-300 text-gray-600 text-base rounded-lg block w-full py-2.5 px-4 focus:outline-none">
-                        <option :value="null" disabled>Select Product Group</option>
-                        <option v-for="productGroup in productGroups" :value="productGroup.id">
 
-                            {{ productGroup.title }}
 
-                        </option>
-                    </select>
-                </div>-->
-<!--End Select Params-->
 
             </div>
+            <!--Start Select Params-->
+
+
+            <div class="grid grid-cols-2 gap-2 text-white text-sm text-center font-bold leading-6">
+
+
+                <div class="block w-full">
+
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Select
+                        Param</label>
+                    <div>
+                        <select v-model="paramOption.paramObj"
+                                class="h-12 border border-gray-300 text-gray-600 text-base rounded-lg block w-full py-2.5 px-4 focus:outline-none">
+                            <option :value="{}" disabled>Select Param</option>
+                            <option v-for="param in params" :value="param">
+
+                                {{ param.title }}
+
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="block w-full">
+                    <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Value</label>
+                    <div class="flex">
+                        <input v-model="paramOption.value" type="text"
+                               class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
+                               placeholder="Value">
+                        <a @click.prevent="setParam" href=""
+                           class="ml-3 h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                    stroke="black" stroke-width="null" class="my-path"></path>
+                                <path d="M12 8V16M16 12H8" stroke="black" stroke-width="null" stroke-linecap="round"
+                                      class="my-path"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Select Params-->
+            <div class="mt-4">
+
+
+                <div class="w-full grid grid-cols-4">
+
+
+                    <div v-for="paramEntre in entries.params" class="m-2">
+                        <div
+                            class="flex items-center w-full max-w-sm py-5 px-6 text-gray-600 bg-white rounded-xl border border-gray-200 shadow-sm"
+                            role="alert">
+                            <p class="text-base font-medium">{{ paramEntre.title }}: </p>
+                            <div class="ml-auto flex items-center space-x-3">
+                                <p class="inline-flex justify-center items-center gap-2 text-indigo-600 font-semibold">
+                                    {{ paramEntre.value }}
+                                </p>
+
+                                <button @click.prevent="removeParam(paramEntre)" type="button"
+                                        class="inline-flex flex-shrink-0 justify-center items-center text-gray-400 transition-all duration-150 "
+                                        data-dismiss="alert">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="w-6 h-6 " viewBox="0 0 24 24" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 17L17 7M17 17L7 7" stroke="currentColor" stroke-width="1.5"
+                                              stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+
+
+
+        </div>
             <!--Add Images-->
             <div>
                 <div class="grid gap-1 mb-3">

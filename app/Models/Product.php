@@ -27,7 +27,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Param::class)->withPivot('value');
     }
-public function children(): HasMany
+    public function children(): HasMany
     {
         return $this->hasMany(Product::class, 'parent_id', 'id');
     }

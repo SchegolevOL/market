@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Nette\Utils\ImageType;
+
 #[ObservedBy(ProductObserver::class)]
 class Product extends Model
 {
@@ -32,6 +34,9 @@ class Product extends Model
         return $this->hasMany(Product::class, 'parent_id', 'id');
     }
 
-
+    public function getPreviewImageUrlAttribute():string|null
+    {
+        return $this->images()->first()->url ?? null;
+    }
 
 }

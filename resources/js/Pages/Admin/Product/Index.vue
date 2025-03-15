@@ -22,10 +22,10 @@ export default {
     methods: {
         updateProductsData(product) {
             console.log('1111')
-            if (product.parent_id){
-                this.productsData.forEach(productData=>{
-                    if (productData.id===product.parent_id){
-                        productData.children = productData.children.filter(child=>child.id!==product.id)
+            if (product.parent_id) {
+                this.productsData.forEach(productData => {
+                    if (productData.id === product.parent_id) {
+                        productData.children = productData.children.filter(child => child.id !== product.id)
                     }
                 })
                 return
@@ -87,7 +87,7 @@ export default {
                                 <tbody class="divide-y divide-gray-300 ">
                                 <template v-for="product in productsData">
 
-                                    <product-item  @product_deleted="updateProductsData"
+                                    <product-item @product_deleted="updateProductsData"
                                                   :product="product"></product-item>
                                     <template v-if="product.children" v-for="productChild in product.children">
                                         <product-item @product_deleted="updateProductsData"

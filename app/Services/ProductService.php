@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class ProductService
 {
@@ -13,17 +14,37 @@ class ProductService
      */
     public static function store(array $data):Product
     {
-        $product = Product::create($data['product']);
-        ProductService::attachBatchParams($product, $data);
-        ImageService::storeBatch($product, $data);
+        try {
+            DB::beginTransaction();
+            $product = Product::create($data['product']);
+            ProductService::attachBatchParams($product, $data);
+            ImageService::storeBatch($product, $data);
+            DB::commit();
+        }catch(\Exception $exception){
+            DB::rollBack();
+            abort(500, $exception->getMessage());
+        }
+
+
+
         return $product;
     }
     public static function update(array $data, Product $product)
     {
+        try {
+            DB::beginTransaction();
+            $product->update($data['product']);
+            ProductService::syncBatchParams($product, $data);
+            ImageService::storeBatch($product, $data);
+            DB::commit();
+        }catch(\Exception $exception){
+            DB::rollBack();
+            abort(500, $exception->getMessage());
+        }
 
-        $product->update($data['product']);
-        ProductService::syncBatchParams($product, $data);
-        ImageService::storeBatch($product, $data);
+
+
+
         return $product->fresh();
     }
     public static function attachBatchParams(Product $product, array $data):void

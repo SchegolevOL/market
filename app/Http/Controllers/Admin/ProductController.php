@@ -26,6 +26,7 @@ class ProductController extends Controller
     {
         $products = Product::query()->whereNull('parent_id')->get();
         $products = ProductResource::collection($products)->resolve();
+
         return inertia("Admin/Product/Index", compact('products'));
     }
 

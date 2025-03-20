@@ -38,6 +38,7 @@ export default {
         </Link>
     </div>
     <div>
+        <h1 class="text-center p-4">Product Group Table</h1>
         <div class="flex flex-col w-full">
             <div class=" overflow-x-auto pb-4">
                 <div class="block">

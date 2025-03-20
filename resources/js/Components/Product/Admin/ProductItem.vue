@@ -43,7 +43,7 @@ export default {
 
 <template>
 
-    <tr class="bg-white transition-all duration-500 hover:bg-gray-50">
+    <tr class= "transition-all duration-500 hover:bg-gray-200">
         <td class=" p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
             {{ product.id }}
         </td>

@@ -6,8 +6,6 @@ import axios from "axios";
 import ErrorValidate from "@/Components/Product/Admin/ErrorValidate.vue";
 
 
-
-
 export default {
     name: "Create",
     layout: AdminLayout,
@@ -36,7 +34,8 @@ export default {
                 params: [],
             },
             success: false,
-            errors:[],
+            errors: [],
+            isColor: false,
         }
 
     },
@@ -59,17 +58,18 @@ export default {
                     }
                     this.success = true
                     this.$refs.image_input.value = null
-                }).catch(e=>{
-                this.errors=e.response.data.errors;
-                console.log(this.errors);
-            })
+                    this.errors = null;
+                }).catch(e => {
+                this.errors = e.response.data.errors;
 
+            })
         },
         setImages(e) {
 
             this.entries.images = e.target.files
         },
         setParam() {
+            console.log(this.paramOption.value);
             this.entries.params.push({
                 id: this.paramOption.paramObj.id,
                 title: this.paramOption.paramObj.title,
@@ -80,6 +80,16 @@ export default {
         },
         removeParam(paramEntre) {
             this.entries.params = this.entries.params.filter(param => param !== paramEntre)
+        },
+        changeType(param) {
+            console.log(param.filter_type_title);
+            if (param.filter_type_title === 'color_picker') {
+                this.isColor = true;
+                this.paramOption.value = null;
+            } else {
+                this.isColor = false;
+                this.paramOption.value = null;
+            }
         }
 
     },
@@ -116,9 +126,7 @@ export default {
                        placeholder="Title" required="">
                 <error-validate :messages="errors['product.title']"/>
             </div>
-            <div v-for="message in errors['product.title']">
 
-            </div>
             <div class="grid grid-cols-2 gap-2 text-white text-sm text-center font-bold leading-6">
                 <div class="block w-full">
                     <label for="countries"
@@ -141,7 +149,7 @@ export default {
             <div class="grid grid-cols-4 gap-3 text-white text-sm text-center font-bold leading-6">
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Article</label>
-                    <input type="text" v-model="entries.product.article"
+                    <input type="number" v-model="entries.product.article"
                            class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                            placeholder="Article" required="">
                     <error-validate :messages="errors['product.article']"/>
@@ -213,6 +221,7 @@ export default {
                         Param</label>
                     <div>
                         <select v-model="paramOption.paramObj"
+                                @change="changeType(paramOption.paramObj)"
                                 class="h-12 border border-gray-300 text-gray-600 text-base rounded-lg block w-full py-2.5 px-4 focus:outline-none">
                             <option :value="{}" disabled>Select Param</option>
                             <option v-for="param in params" :value="param">
@@ -226,12 +235,19 @@ export default {
 
                 </div>
                 <div class="block w-full">
+
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Value</label>
                     <div class="flex">
-                        <input v-model="paramOption.value" type="text"
-                               class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
-                               placeholder="Value">
-
+                        <div v-if="!isColor">
+                            <input v-model="paramOption.value" type="text"
+                                   class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
+                                   placeholder="Value">
+                        </div>
+                        <div v-if="isColor">
+                            <input v-model="paramOption.value" type="color"
+                                   class="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
+                                   id="hs-color-input" value="#2563eb" title="Choose your color">
+                        </div>
                         <a @click.prevent="setParam" href=""
                            class="ml-3 mblock h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -262,6 +278,7 @@ export default {
                             <div class="ml-auto flex items-center space-x-3">
                                 <p class="inline-flex justify-center items-center gap-2 text-indigo-600 font-semibold">
                                     {{ paramEntre.value }}
+
                                 </p>
 
                                 <button @click.prevent="removeParam(paramEntre)" type="button"

@@ -28,11 +28,13 @@ class UpdateRequest extends FormRequest
             'product.content'=>'required',
             'product.price'=>'required|numeric',
             'product.old_price'=>'required|numeric',
+            'product.parent_id'=>'nullable|integer|exists:products,id',
             'product.qty'=>'required|integer',
             'product.product_group_id'=>'required|integer|exists:product_groups,id',
             'product.category_id'=>'required|integer|exists:categories,id',
             'images' => 'nullable|array',
             'images.*' => 'required|file',
+            'params'=>'nullable|array',
             'params.*.id'=>'required|integer|exists:params,id',
             'params.*.value'=>'required|string',
             //'product.article'=>'required|integer|unique:products,article',
@@ -44,7 +46,7 @@ class UpdateRequest extends FormRequest
         $validated = $this->validated();
         return $this->merge([
             'product'=>$validated['product'],
-            'params'=>$validated['params'],
+            'params'=>$validated['params']??[],
             'images'=>$this->images ?? []
         ]);
     }

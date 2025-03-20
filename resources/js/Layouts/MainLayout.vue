@@ -13,8 +13,8 @@ export default {
         <header>
             Market Admin
         </header>
-    </section><slot/>
-
+    </section>
+        <slot/>
     <section>
         <footer>
 

@@ -31,11 +31,11 @@ class DatabaseSeeder extends Seeder
         ]);
         $user->roles()->sync($role->id);
 
-        $this->call([
+        /*$this->call([
             ParamSeeder::class,
             ProductGroupSeeder::class,
             CategorySeeder::class,
-        ]);
+        ]);*/
 
 
 

@@ -50,6 +50,7 @@ export default {
             </Link>
         </div>
         <div>
+            <h1 class="text-center p-4">Products Table</h1>
             <div class="flex flex-col w-full">
                 <div class=" overflow-x-auto pb-4">
                     <div class="block">
@@ -89,12 +90,12 @@ export default {
 
                                     <product-item @product_deleted="updateProductsData"
                                                   :product="product"></product-item>
+
                                     <template v-if="product.children" v-for="productChild in product.children">
                                         <product-item @product_deleted="updateProductsData"
-                                                      :product="productChild"></product-item>
-
-
+                                                      :product="productChild" class="bg-green-300"></product-item>
                                     </template>
+
                                 </template>
                                 </tbody>
                             </table>

@@ -26,23 +26,16 @@ export default {
 
             axios.post(route('admin.params.store'), this.param)
                 .then(res=>{
-                    console.log(res);
-                    this.param={parent_id:null}
 
+                    this.param={parent_id:null}
+                    setTimeout(()=>{this.success = false}, 2000)
                     this.success = true
-                    console.log(this.success)
+
                 })
         },
 
     },
-    watch: {
-        param: {
-            handler(new_val, old_val){
-                this.success=false
-            },
-            deep: true
-        }
-    }
+
 
 }
 </script>

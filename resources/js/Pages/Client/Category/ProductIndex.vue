@@ -6,7 +6,7 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import Sidebar from "@/Components/Sidebar.vue";
 
 export default {
-    name: "Index",
+    name: "ProductIndex",
     layout:MainLayout,
     components: {Sidebar, ProductCard},
 

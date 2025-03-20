@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -39,4 +41,9 @@ class Product extends Model
         return $this->images()->first()->url ?? null;
     }
 
+    public function scopeByCategories(Builder $query, array $categoryChildren): Builder
+    {
+        return $query->whereIn('category_id', array_column($categoryChildren, 'id'))
+            ->whereNull('parent_id');
+    }
 }

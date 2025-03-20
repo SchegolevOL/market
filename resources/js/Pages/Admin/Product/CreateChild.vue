@@ -2,11 +2,13 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
 import axios from "axios";
+import ErrorValidate from "@/Components/Product/Admin/ErrorValidate.vue";
 
 export default {
     name: "CreateChild",
     layout: AdminLayout,
     components: {
+        ErrorValidate,
         Link
     },
     props: {
@@ -27,7 +29,9 @@ export default {
                 params:this.product.params,
 
             },
-            success: false
+            success: false,
+            errors: [],
+            isColor: false,
         }
 
     },
@@ -47,8 +51,10 @@ export default {
                     })
                     this.success = true
 
-                })
-
+                }).catch(e => {
+                    this.errors = e.response.data.errors;
+                    console.log(this.errors);
+            })
         },
         setImages(e) {
 
@@ -65,17 +71,20 @@ export default {
         },
         removeParam(paramEntre) {
             this.entries.params = this.entries.params.filter(param => param !== paramEntre)
+        },
+        changeType(param) {
+            console.log(param.filter_type_title);
+            if (param.filter_type_title === 'color_picker') {
+                this.isColor = true;
+                this.paramOption.value = null;
+            } else {
+                this.isColor = false;
+                this.paramOption.value = null;
+            }
         }
 
     },
-    watch: {
-        entries: {
-            handler(){
-                this.success=false
-            },
-            deep: true
-        }
-    },
+
 
 
 }
@@ -95,11 +104,7 @@ export default {
             </Link>
         </div>
 
-        <div v-if="success"
-             class="p-4 mb-4 text-sm text-emerald-500 rounded-xl bg-emerald-50 border border-emerald-400 font-normal"
-             role="alert">
-            <span class="font-semibold mr-2">Success</span> Your subscription payment is successful
-        </div>
+
 
         <div v-if="success"
              class="p-4 mb-4 text-sm text-emerald-500 rounded-xl bg-emerald-50 border border-emerald-400 font-normal"
@@ -113,6 +118,7 @@ export default {
                 <input type="text" v-model="entries.product.title"
                        class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                        placeholder="Title" required="">
+                <error-validate :messages="errors['product.title']"/>
             </div>
             <div class="grid grid-cols-2 gap-2 text-white text-sm text-center font-bold leading-6">
                 <div class="block w-full">
@@ -122,6 +128,8 @@ export default {
                     <textarea v-model="entries.product.description"
                               class="block w-full h-40 px-4 py-2.5 text-base leading-7 font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-2xl placeholder-gray-400 focus:outline-none resize-none"
                               placeholder="Write a description..."></textarea>
+                    <error-validate :messages="errors['product.description']"/>
+
                 </div>
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Content</label>
@@ -129,6 +137,7 @@ export default {
                     <textarea v-model="entries.product.content"
                               class="block w-full h-40 px-4 py-2.5 text-base leading-7 font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-2xl placeholder-gray-400 focus:outline-none resize-none"
                               placeholder="Write a content..."></textarea>
+                    <error-validate :messages="errors['product.content']"/>
                 </div>
             </div>
             <div class="grid grid-cols-4 gap-3 text-white text-sm text-center font-bold leading-6">
@@ -137,6 +146,7 @@ export default {
                     <input type="text" v-model="entries.product.article"
                            class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                            placeholder="Article" required="">
+                    <error-validate :messages="errors['product.article']"/>
                 </div>
 
                 <div class="block w-full">
@@ -144,6 +154,7 @@ export default {
                     <input type="number" v-model="entries.product.price"
                            class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                            placeholder="Price" required="">
+                    <error-validate :messages="errors['product.price']"/>
                 </div>
 
                 <div class="block w-full">
@@ -151,12 +162,14 @@ export default {
                     <input type="number" v-model="entries.product.old_price"
                            class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                            placeholder="Old Price" required="">
+                    <error-validate :messages="errors['old_price']"/>
                 </div>
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">QTY</label>
                     <input type="number" v-model="entries.product.qty"
                            class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
                            placeholder="QTY" required="">
+                    <error-validate :messages="errors['product.qty']"/>
                 </div>
 
             </div>
@@ -173,6 +186,7 @@ export default {
 
                         </option>
                     </select>
+                    <error-validate :messages="errors['product.category_id']"/>
                 </div>
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Select Product
@@ -186,6 +200,7 @@ export default {
 
                         </option>
                     </select>
+                    <error-validate :messages="errors['product.product_group_id']"/>
                 </div>
             </div>
             <!--Start Select Params-->
@@ -200,6 +215,7 @@ export default {
                         Param</label>
                     <div>
                         <select v-model="paramOption.paramObj"
+                                @change="changeType(paramOption.paramObj)"
                                 class="h-12 border border-gray-300 text-gray-600 text-base rounded-lg block w-full py-2.5 px-4 focus:outline-none">
                             <option :value="{}" disabled>Select Param</option>
                             <option v-for="param in params" :value="param">
@@ -208,15 +224,23 @@ export default {
 
                             </option>
                         </select>
+
                     </div>
 
                 </div>
                 <div class="block w-full">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-600 w-full">Value</label>
                     <div class="flex">
-                        <input v-model="paramOption.value" type="text"
-                               class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
-                               placeholder="Value">
+                        <div v-if="!isColor">
+                            <input v-model="paramOption.value" type="text"
+                                   class="block w-full h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none "
+                                   placeholder="Value">
+                        </div>
+                        <div v-if="isColor">
+                            <input v-model="paramOption.value" type="color"
+                                   class="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700"
+                                   id="hs-color-input" value="#2563eb" title="Choose your color">
+                        </div>
                         <a @click.prevent="setParam" href=""
                            class="ml-3 mblock h-11 px-5 py-2.5 bg-white leading-7 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"

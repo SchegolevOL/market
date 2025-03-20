@@ -28,21 +28,14 @@ export default {
                 .then(res=>{
 
 
-
+                    setTimeout(()=>{this.success = false}, 2000)
                     this.success = true
                     this.productGroup.title=''
                 })
         },
 
     },
-    watch: {
-        productGroup: {
-            handler(new_val, old_val){
-                this.success=false
-            },
-            deep: true
-        }
-    }
+
 
 }
 </script>

@@ -18,6 +18,17 @@ class ImageService
                 'path' => Storage::disk('public')->putFile('/images', $image),
             ]);
         }
+
+
+        if (isset($data['parent_images'])) {
+
+            $parentImages = Image::query()->whereIn('id', array_column($data['parent_images'], 'id'))->get();
+
+           foreach ($parentImages as $parentImage) {
+
+                $product->images()->create(['path' => $parentImage->path]);
+            }
+        }
     }
 
 

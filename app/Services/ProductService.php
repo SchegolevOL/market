@@ -61,7 +61,7 @@ class ProductService
         ProductService::attachBatchParams($product, $data);
     }
 
-    public static function productIndexByCategory(array $categoryChildren)
+    public static function productIndexByCategory(Collection $categoryChildren)
     {
 
 

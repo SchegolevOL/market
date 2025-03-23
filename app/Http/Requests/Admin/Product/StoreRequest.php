@@ -21,6 +21,7 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'product.title'=>'required|string|max:255',
             'product.description'=>'required',
@@ -37,6 +38,7 @@ class StoreRequest extends FormRequest
             'params.*.id'=>'required|integer|exists:params,id',
             'params.*.value'=>'required|string',
             'product.article'=>'required|integer|unique:products,article',
+            'parent_images'=>'nullable|array',
         ];
     }
 

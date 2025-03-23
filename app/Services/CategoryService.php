@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Category;
+use Illuminate\Support\Collection;
 
 class CategoryService
 {
@@ -16,15 +17,27 @@ class CategoryService
         return $category->fresh();
     }
 
-    public static function getCategoryChildren(Category $category):array
+    public static function getCategoryChildren(Category $category):Collection
     {
-        $array = [];
-        $array[] = $category;
+        $collections = collect([]);
+        $collections[] = $category;
         $categoryChildren = Category::query()->where('parent_id', $category->id)->get();
         foreach ($categoryChildren as $categoryChild) {
-            $array[] = array_merge($array, self::getCategoryChildren($categoryChild));
+            $collections->push($collections->merge(self::getCategoryChildren($categoryChild)));
         }
 
-        return $array;
+        return $collections;
+    }
+
+    public static function getCategoryParent(Category $category):Collection
+    {
+        $collectioms = collect([]);
+        if ($category->parent_id)
+        {
+            $parentCategory =Category::query()->find($category->parent_id);
+            $collectioms->push($parentCategory);
+            $collectioms = $collectioms->merge(self::getCategoryParent($parentCategory));
+        }
+        return $collectioms ;
     }
 }

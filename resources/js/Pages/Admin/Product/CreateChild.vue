@@ -27,6 +27,7 @@ export default {
                 product:this.product,
                 images:null,
                 params:this.product.params,
+                parentImages:null,
 
             },
             success: false,
@@ -37,7 +38,10 @@ export default {
     },
     methods: {
         storeProduct() {
+
             this.entries.product.parent_id = this.product.id
+            this.entries.parent_images = this.product.images
+
             axios.post(route('admin.products.store'), this.entries, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -81,7 +85,13 @@ export default {
                 this.isColor = false;
                 this.paramOption.value = null;
             }
-        }
+        },
+        deleteImages(image){
+            axios.delete(route('admin.images.destroy', image.id)).then(res=>{
+
+                this.product.images = this.product.images.filter(productImage=>productImage.id !== image.id)
+            })
+        },
 
     },
 
@@ -111,6 +121,20 @@ export default {
              role="alert">
             <span class="font-semibold mr-2">Success</span> Your subscription payment is successful
         </div>
+
+        <!--      Start Displaying images        -->
+        <div class="flex justify-between">
+            <div v-for="image in product.images"
+                 class="w-full relative h-auto p-1 border border-gray-200 rounded-md max-w-sm mx-auto text-center">
+                <img :src="image.url" :alt="product.title" class="rounded-md max-w-full h-auto">
+                <div >
+                    <a @click.prevent="deleteImages(image)" href="" class="inline-block px-2 py-1 text-sm bg-red-500 text-white absolute inset-x-0 bottom-0">del</a>
+                </div>
+            </div>
+
+        </div>
+        <!--      End Displaying images        -->
+
         <div class="p-4">
             <h1 class="text-center">Create Product</h1>
             <div class="block w-full">

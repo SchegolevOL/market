@@ -22,6 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
 
+
         return [
             'product.title'=>'required|string|max:255',
             'product.description'=>'required',

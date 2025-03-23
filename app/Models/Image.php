@@ -11,4 +11,13 @@ class Image extends Model
     {
         return Storage::disk('public')->url($this->path);
     }
+
+    public function getParentPathAttribute(): string
+    {
+        return Storage::disk('public')->url($this->path);
+    }
+
+
+
+
 }

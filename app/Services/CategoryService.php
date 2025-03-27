@@ -19,14 +19,15 @@ class CategoryService
 
     public static function getCategoryChildren(Category $category):Collection
     {
-        $collections = collect([]);
-        $collections[] = $category;
+        $collection = collect([]);
+
         $categoryChildren = Category::query()->where('parent_id', $category->id)->get();
         foreach ($categoryChildren as $categoryChild) {
-            $collections->push($collections->merge(self::getCategoryChildren($categoryChild)));
-        }
 
-        return $collections;
+            $collection= $collection->merge(self::getCategoryChildren($categoryChild));
+        }
+        $collection->push($category);
+        return $collection;
     }
 
     public static function getCategoryParent(Category $category):Collection

@@ -18,6 +18,7 @@ export default {
         products:Array,
         breadcrumbs:Array,
         category:Array,
+        params:Array,
     },
 
 }
